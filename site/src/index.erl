@@ -5,16 +5,18 @@
 
 main() -> #template { file="./site/templates/bare.html" }.
 
-title() -> "Welcome to Nitrogen".
+title() -> ":: Rentaka!".
 
 body() ->
-    #container_12 { body=[
-        #grid_8 { alpha=true, prefix=2, suffix=2, omega=true, body=inner_body() }
+    #container_12 { class=rentaka, body=[
+        #grid_8 { alpha=true, prefix=2, suffix=2, omega=true, body=common:header() },
+        #grid_8 { alpha=true, prefix=2, suffix=2, omega=true, body=inner_body() },
+        #grid_8 { alpha=true, prefix=2, suffix=2, omega=true, body=common:footer() }
     ]}.
 
 inner_body() -> 
     [
-        #h1 { text="Welcome to Nitrogen" },
+        #h1 { text="Welcome to Rentaka" },
         #p{},
         "
         If you can see this page, then your Nitrogen server is up and
