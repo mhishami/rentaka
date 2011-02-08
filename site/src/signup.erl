@@ -27,7 +27,7 @@ inner_body() ->
             #textbox { id=mobile_no },
 
             #p{},
-            #button { id=signUpButton, text="Sign Me Up!", postback=click },
+            #button { id=signUpButton, text="Sign Me Up!", postback=signMeUp },
 
             #p{},
             #panel { id=placeholder }
@@ -42,5 +42,12 @@ inner_body() ->
     Body.
 
 	
-event(click) ->
-    wf:insert_top(placeholder, "<p>You clicked the button!").
+event(signMeUp) ->
+    Username = wf:q(username),
+    MobileNo = wf:q(mobile_no),
+
+    case db:find_user(Username, MobileNo) of
+        {ok, User} -> wf:insert_top(placeholder, User);
+        _          -> wf:insert_top(placeholder, "No such user!")
+    end.
+

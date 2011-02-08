@@ -5,6 +5,6 @@
               {applications,[kernel,stdlib]},
               {mod,{nitrogen_app,[]}},
               {env,[]},
-              {modules,[common,index,login,nitrogen_app,nitrogen_init,
+              {modules,[common,db,index,login,nitrogen_app,nitrogen_init,
                         nitrogen_sup,nitrogen_webmachine,signup,
                         static_resource,static_route_handler,verify]}]}.
