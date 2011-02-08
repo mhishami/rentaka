@@ -1,2 +1,3 @@
 log/*
 site/ebin/*.beam
+lib/*/ebin/*.beam

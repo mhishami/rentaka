@@ -4,5 +4,6 @@
 %% Called during application startup.
 %% Put other initialization code here.
 init() ->
+    application:start(erlmongo),
     application:start(nprocreg),
     application:start(nitrogen_webmachine).
