@@ -7,7 +7,19 @@
      888b "88bo,888oo,__ 888    Y88     88,   888   888,"888"88o, 888   888,
      MMMM   "W" """"YUMMMMMM     YM     MMM   YMM   ""`  MMM "MMP"YMM   ""` 
     
+    How to run
+    ----------
+    1) run your mongodb 
+    2) make
+    3) bin/nitrogen start
+    4) point your browser to http://localhost:8000
+    5) start adding more codes, and make it usable
+
+    Have fun!
+
+
     Change History
     --------------
 
     V0.1 - initial commit for base project
+    V0.2 - Added some skeleton pages, and support for MongoDB
