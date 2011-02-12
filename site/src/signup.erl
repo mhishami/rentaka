@@ -38,8 +38,8 @@ inner_body() ->
         #is_required { text="Password is required" }
     ]}),
     wf:wire(signUpButton, mobile_no, #validate { validators = [
-        #js_custom { text="Please fix your mobile number, e.g. +60192221212",
-            function=mobileField }
+        #custom { text="Please fix your mobile number, e.g. +60192221212",
+            function=fun validateMobile/2}
     ]}),
     Body.
 
@@ -54,5 +54,11 @@ event(signup) ->
     case db:find("user", [{username, Username}]) of
         {ok, [_User]} -> wf:flash(Id, "User already exists. \nPlease use a different username");
         _            -> wf:flash(Id, "New user created!")
+    end.
+
+validateMobile(_Tag, Mobile) ->
+    case re:run(Mobile, "\\+6[0-9]{10,10}", []) of
+        {match,[{0,12}]} -> true;
+        _                -> false
     end.
 
