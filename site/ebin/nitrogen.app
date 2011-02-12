@@ -1,10 +1,11 @@
 {application,nitrogen,
-             [{description,"My Nitrogen Web Project"},
+             [{description,"Rentaka Web Project"},
               {vsn,"1"},
-              {registered,[]},
+              {registered,[zm_db,zm_auth]},
               {applications,[kernel,stdlib]},
               {mod,{nitrogen_app,[]}},
               {env,[]},
               {modules,[about,common,db,help,index,login,nitrogen_app,
                         nitrogen_init,nitrogen_sup,nitrogen_webmachine,signup,
-                        static_resource,static_route_handler,verify]}]}.
+                        static_resource,static_route_handler,verify,zm_auth,
+                        zm_db]}]}.

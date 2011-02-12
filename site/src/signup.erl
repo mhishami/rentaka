@@ -38,7 +38,7 @@ inner_body() ->
         #is_required { text="Password is required" }
     ]}),
     wf:wire(signUpButton, mobile_no, #validate { validators = [
-        #custom { text="Please fix your mobile number, e.g. +60192221212",
+        #custom { text="Invalid mobile number. (hint: +60192221212)",
             function=fun validateMobile/2}
     ]}),
     Body.
@@ -51,9 +51,9 @@ event(signup) ->
     % prepare the UI
     Id = wf:temp_id(),
 
-    case db:find("user", [{username, Username}]) of
-        {ok, [_User]} -> wf:flash(Id, "User already exists. \nPlease use a different username");
-        _            -> wf:flash(Id, "New user created!")
+    case zm_auth:get_user(Username) of
+        {ok, _}    -> wf:flash(Id, "User already exists. \nPlease use a different username");
+        {error, _} -> wf:flash(Id, "New user created!")
     end.
 
 validateMobile(_Tag, Mobile) ->

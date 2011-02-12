@@ -1,8 +1,8 @@
 {application, nitrogen,
  [
-  {description, "My Nitrogen Web Project"},
+  {description, "Rentaka Web Project"},
   {vsn, "1"},
-  {registered, []},
+  {registered, [zm_db, zm_auth]},
   {applications, [kernel, stdlib]},
   {mod, { nitrogen_app, []}},
   {env, []}

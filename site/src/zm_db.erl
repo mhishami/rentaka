@@ -1,8 +1,8 @@
 %%
-%% file: db.erl
+%% file: zm_db.erl
 %% desc: OTP for connecting to MongoDB
 %%
--module(db).
+-module(zm_db).
 -author('Hisham Ismail <mhishami@gmail.com>').
 
 -behaviour(gen_server).

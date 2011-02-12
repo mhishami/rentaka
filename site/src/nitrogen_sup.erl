@@ -46,9 +46,10 @@ init([]) ->
     % the pool name is taken form emongo.config. Needs to find a better 
     % way of getting the pool name, maybe from env?
     %
-    Mongo = ?CHILD(db, worker, [pool1]),
+    Mongo = ?CHILD(zm_db, worker, [pool1]),
+    Auth = ?CHILD(zm_auth, worker),
 
-    {ok, { {one_for_one, 5, 10}, [Mongo]} }.
+    {ok, { {one_for_one, 5, 10}, [Mongo, Auth]} }.
 
 dispatch() -> 
     [

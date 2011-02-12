@@ -24,3 +24,12 @@ footer() ->
         ]}
     ].
 
+hex_string(Word) when is_list(Word) ->
+    hex_string(crypto:md5(Word));
+
+hex_string(Binary) when is_binary(Binary) ->
+    lists:flatten(lists:map(
+        fun(X) -> io_lib:format("~2.16.0b", [X]) end, 
+        binary_to_list(Binary))).
+
+
