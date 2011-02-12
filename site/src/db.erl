@@ -80,7 +80,7 @@ start_link(Args) ->
 %%
 init(Args) -> 
     io:format("~p starting with pool name ~p...~n", [?MODULE, Args]),
-    {ok, #state{}}.
+    {ok, #state{pool=Args}}.
 
 %% ----------------------------------------------------------------------------
 %%
