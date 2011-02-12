@@ -9,7 +9,7 @@
 
 %% Helper macro for declaring children of supervisor
 -define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
--define(CHILD2(I, Type, Args), {I, {I, start_link, Args}, permanent, 5000, Type, [I]}).
+-define(CHILD(I, Type, Args), {I, {I, start_link, Args}, permanent, 5000, Type, [I]}).
 
 %% ===================================================================
 %% API functions
@@ -46,7 +46,7 @@ init([]) ->
     % the pool name is taken form emongo.config. Needs to find a better 
     % way of getting the pool name, maybe from env?
     %
-    Mongo = ?CHILD(db, worker),
+    Mongo = ?CHILD(db, worker, [pool1]),
 
     {ok, { {one_for_one, 5, 10}, [Mongo]} }.
 

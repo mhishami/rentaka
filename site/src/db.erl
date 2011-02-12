@@ -14,7 +14,7 @@
 
 -export([save/2, find/1, find/2, find/3, update/3, upsert/3, delete/2]).
 
--export([start_link/0]).
+-export([start_link/1]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
@@ -67,8 +67,8 @@ stop() ->
 %%
 %% @doc Starts the server
 %%
-start_link() -> 
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+start_link(Args) -> 
+    gen_server:start_link({local, ?SERVER}, ?MODULE, Args, []).
 
 %% ----------------------------------------------------------------------------
 %%
@@ -78,10 +78,9 @@ start_link() ->
 %%                     {stop, Reason} 
 %% @doc Starts the server
 %%
-init([]) -> 
-    Args = pool1,
+init(Args) -> 
     io:format("~p starting with pool name ~p...~n", [?MODULE, Args]),
-    {ok, #state{pool=Args}}.
+    {ok, #state{}}.
 
 %% ----------------------------------------------------------------------------
 %%
@@ -98,25 +97,25 @@ handle_call({echo, Data}, _From, State) ->
     {reply, {ok, Data}, State};
 
 handle_call({save, Coll, Docs}, _From, State) ->
-    {reply, emongo:insert(State#state.pool, Coll, Docs), State};
+    {reply, {ok, emongo:insert(State#state.pool, Coll, Docs)}, State};
 
 handle_call({find, Coll}, _From, State) ->
-    {reply, emongo:find(State#state.pool, Coll), State};
+    {reply, {ok, emongo:find(State#state.pool, Coll)}, State};
 
 handle_call({find, Coll, Selector}, _From, State) ->
-    {reply, emongo:find(State#state.pool, Coll, Selector), State};
+    {reply, {ok, emongo:find(State#state.pool, Coll, Selector)}, State};
 
 handle_call({find, Coll, Selector, Options}, _From, State) ->
-    {reply, emongo:find(State#state.pool, Coll, Selector, Options), State};
+    {reply, {ok, emongo:find(State#state.pool, Coll, Selector, Options)}, State};
 
 handle_call({update, Coll, Selector, Docs}, _From, State) ->
-    {reply, emongo:update(State#state.pool, Coll, Selector, Docs, false), State};
+    {reply, {ok, emongo:update(State#state.pool, Coll, Selector, Docs, false)}, State};
 
 handle_call({upsert, Coll, Selector, Docs}, _From, State) ->
-    {reply, emongo:update(State#state.pool, Coll, Selector, Docs, true), State};
+    {reply, {ok, emongo:update(State#state.pool, Coll, Selector, Docs, true)}, State};
 
 handle_call({delete, Coll, Selector}, _From, State) ->
-    {reply, emongo:delete(State#state.pool, Coll, Selector), State};
+    {reply, {ok, emongo:delete(State#state.pool, Coll, Selector)}, State};
 
 handle_call(_Request, _From, State) -> 
     {reply, {error, not_implemented}, State}.

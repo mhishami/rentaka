@@ -20,17 +20,15 @@ inner_body() ->
     Body = [
         #panel { style="margin: 50px 100px;", body=[
             #h2 { text="Sign-Up" },
+            #flash {},
             #p{},
             #label { text="Username" },
-            #textbox { id=username },
+            #textbox { id=username, next=mobile_no },
             #label { text="Mobile Number" },
-            #textbox { id=mobile_no },
+            #textbox { id=mobile_no, next=signUpButton },
 
             #p{},
-            #button { id=signUpButton, text="Sign Me Up!", postback=signMeUp },
-
-            #p{},
-            #panel { id=placeholder }
+            #button { id=signUpButton, text="Sign Me Up!", postback=signup }
         ]}
     ],
     wf:wire(signUpButton, username, #validate { validators = [
@@ -39,15 +37,22 @@ inner_body() ->
     wf:wire(signUpButton, mobile_no, #validate { validators = [
         #is_required { text="Password is required" }
     ]}),
+    wf:wire(signUpButton, mobile_no, #validate { validators = [
+        #js_custom { text="Please fix your mobile number, e.g. +60192221212",
+            function=mobileField }
+    ]}),
     Body.
 
 	
-event(signMeUp) ->
+event(signup) ->
     Username = wf:q(username),
-    MobileNo = wf:q(mobile_no),
+    %MobileNo = wf:q(mobile_no),
 
-    case db:find_user(Username, MobileNo) of
-        {ok, User} -> wf:insert_top(placeholder, User);
-        _          -> wf:insert_top(placeholder, "No such user!")
+    % prepare the UI
+    Id = wf:temp_id(),
+
+    case db:find("user", [{username, Username}]) of
+        {ok, [_User]} -> wf:flash(Id, "User already exists. \nPlease use a different username");
+        _            -> wf:flash(Id, "New user created!")
     end.
 
