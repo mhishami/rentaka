@@ -28,6 +28,9 @@ inner_body() ->
             #button { id=emailButton, text="Submit", postback=click }
         ]}
     ],
+    wf:wire(emailButton, email, #validate { validators = [
+        #is_email { text="Email address is invalid!" }
+    ]}),
     Body.
 	
 event(click) ->

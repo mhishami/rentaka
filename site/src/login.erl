@@ -19,7 +19,7 @@ body() ->
 
 
 inner_body() -> 
-    [
+    Body = [
         #panel { style="margin: 50px 100px;", body=[
             #h2 { text="Login" },
             #p{},
@@ -35,8 +35,15 @@ inner_body() ->
             #p{},
             #flash{}
         ]}
-    ].
-	
+    ],
+	wf:wire(loginButton, username, #validate { validators = [
+        #is_required { text="Username is required" }
+    ]}),
+    wf:wire(loginButton, password, #validate { validators = [
+        #is_required { text="Password is required" }
+    ]}),
+    Body.
+ 
 event(forgot) ->
     wf:redirect("/forgot");
 
