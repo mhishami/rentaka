@@ -3,7 +3,7 @@
 -compile(export_all).
 -include_lib("nitrogen_core/include/wf.hrl").
 
-main() -> common:main().
+main() -> #template { file="./site/templates/bare.html" }.
 
 title() -> ":: Rentaka!".
 
