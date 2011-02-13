@@ -52,8 +52,11 @@ event(signup) ->
     Id = wf:temp_id(),
 
     case zm_auth:get_user(Username) of
-        {ok, _}    -> wf:flash(Id, "User already exists. \nPlease use a different username");
-        {error, _} -> wf:redirect("/verify")
+        {ok, _}    -> 
+            wf:flash(Id, "User already exists. \nPlease use a different username");
+        {error, _} -> 
+            wf:session(username, Username),
+            wf:redirect("/verify")
     end.
 
 validateMobile(_Tag, Mobile) ->

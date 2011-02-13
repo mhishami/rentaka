@@ -93,10 +93,11 @@ handle_call({get_user, Username}, _From, State) ->
     {reply, Reply, State};
 
 handle_call({authenticate, Username, Password}, _From, State) ->
-    Reply = case zm_db:find(?USERDB, [{username, Username},
-                                      {password, common:hex_string(Password)}]) of
-                {ok, []}     -> {error, no_such_user};
-                {ok, _User}  -> {ok, user_ok}
+    User = [{username, Username},
+            {password, common:hex_string(Password)}],
+    Reply = case zm_db:find(?USERDB, User) of
+                {ok, []} -> {error, no_such_user};
+                {ok, _ } -> {ok, user_ok}
             end,
     {reply, Reply, State};
 

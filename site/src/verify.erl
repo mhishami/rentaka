@@ -24,20 +24,33 @@ inner_body() ->
             #label { text="Sign-Up Code (from SMS)" },
             #textbox { id=reg_code, next=passwd1 },
             #label { text="Password" },
-            #textbox { id=passwd1, next=passwd2 },
+            #password { id=passwd1, next=passwd2 },
             #label { text="Password (again)" },
-            #textbox { id=passwd2, next=verifyButton },
+            #password { id=passwd2, next=verifyButton },
 
             #p{},
             #button { id=verifyButton, text="Click me!", postback=click },
 
             #p{},
             #panel { id=placeholder }
-        ]}],
-    wf:wire(verifyButton, #event {
-        type=click, actions=#effect { effect=blink }}),
+        ]}
+    ],
+    wf:wire(verifyButton, passwd1, #validate { validators = [
+        #is_required { text="Password is required" }
+    ]}),
+    wf:wire(verifyButton, passwd2, #validate { validators = [
+        #confirm_password { text="Password must match.", password=passwd1 }
+    ]}),
     Body.
 	
 event(click) ->
-    wf:update(placeholder, "<p>You clicked the button!").
+    %% ok, we create the user here
+    Username = wf:session(username),
+    Password = wf:q(passwd1),
+
+    zm_auth:create_user(Username, Password),
+    wf:role(users, true),
+    wf:user(Username),
+    wf:redirect_from_login("/home").
+ 
 
