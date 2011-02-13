@@ -4,18 +4,35 @@
 -include_lib("nitrogen_core/include/wf.hrl").
 -include("records.hrl").
 
-main() -> #template { file="./site/templates/bare.html" }.
+main() -> 
+    case wf:role(users) of
+        true -> #template { file="./site/templates/bare.html" };
+        false -> wf:redirect_to_login("/login")
+    end.
 
 header() ->
-    [
-        #p{},
-        #panel { class=action, body=[
-            #link { url="/signup", text="Sign-Up" }, " | ",
-            #link { url="/login", text="Login" }, " | ",
-            #link { url="/about", text="About Us" }, " | ",
-            #link { url="/help", text="Help" }
-        ]}
-    ].
+    Body =  case wf:role(users) of
+                true ->
+                    [
+                        #p{},
+                        #panel {class=action, body=[
+                            #link { url="/logout", text="Welcome (" ++ wf:user() ++ "), Logout" }, " | ",
+                            #link { url="/about", text="About Us" }, " | ",
+                            #link { url="/help", text="Help" }
+                        ]}
+                    ];
+                false ->
+                    [
+                        #p{},
+                        #panel {class=action, body=[
+                            #link { url="/signup", text="Sign-Up" }, " | ",
+                            #link { url="/login", text="Login" }, " | ",
+                            #link { url="/about", text="About Us" }, " | ",
+                            #link { url="/help", text="Help" }
+                        ]}
+                    ]
+            end,
+    Body.
 
 footer() ->
     [

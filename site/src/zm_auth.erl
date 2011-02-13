@@ -11,8 +11,9 @@
 
 -define(SERVER, ?MODULE).
 -define(RETRY, 3).
+-define(USERDB, <<"user">>).
 
--export([get_user/1, create_user/2]).
+-export([get_user/1, create_user/2, authenticate/2]).
 
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -29,6 +30,9 @@ echo(Data) ->
 
 get_user(Username) ->
     gen_server:call(?SERVER, {get_user, Username}).
+
+authenticate(Username, Password) ->
+    gen_server:call(?SERVER, {authenticate, Username, Password}).
 
 create_user(Username, Password) ->
     gen_server:call(?SERVER, {create_user, Username, Password}).
@@ -82,9 +86,26 @@ handle_call({echo, Data}, _From, State) ->
     {reply, {ok, Data}, State};
 
 handle_call({get_user, Username}, _From, State) ->
-    Reply = case zm_db:find("user", [{username, Username}]) of
+    Reply = case zm_db:find(?USERDB, [{username, Username}]) of
+                {ok, []}   -> {error, no_such_user};
+                {ok, User} -> {ok, User}
+            end,
+    {reply, Reply, State};
+
+handle_call({authenticate, Username, Password}, _From, State) ->
+    Reply = case zm_db:find(?USERDB, [{username, Username},
+                                      {password, common:hex_string(Password)}]) of
                 {ok, []}     -> {error, no_such_user};
-                {ok, [User]} -> {ok, User}
+                {ok, _User}  -> {ok, user_ok}
+            end,
+    {reply, Reply, State};
+
+handle_call({create_user, Username, Password}, _From, State) ->
+    User = [{username, Username},
+            {password, common:hex_string(Password)}],
+    Reply = case zm_db:save(?USERDB, User) of
+                {ok,ok} -> {ok, user_created};
+                Error   -> {error, Error}
             end,
     {reply, Reply, State};
 

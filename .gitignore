@@ -1,3 +1,4 @@
 log/*
 site/ebin/*.beam
 lib/*/ebin/*.beam
+site/src/*.swp

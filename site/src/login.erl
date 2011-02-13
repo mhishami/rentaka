@@ -4,9 +4,11 @@
 -include_lib("nitrogen_core/include/wf.hrl").
 -include("records.hrl").
 
+-define(USER, <<"user">>).
+
 main() -> #template { file="./site/templates/bare.html" }.
 
-title() -> "Hello from login.erl!".
+title() -> "Rentaka :: Login".
 
 body() ->
     #container_12 { class=rentaka, body=[
@@ -22,18 +24,33 @@ inner_body() ->
             #h2 { text="Login" },
             #p{},
             #label { text="Username" },
-            #textbox { id=username },
+            #textbox { id=username, next=password },
             #label { text="Password" },
-            #password { id=password },
+            #password { id=password, next=loginButton },
 
             #p{},
-            #button { text="Login", postback=login },
-            #button { text="Forgot Password", postback=forgot },
+            #button { id=loginButton, text="Login", postback=login },
+            #button { id=forgotButton, text="Forgot Password", postback=forgot },
 
             #p{},
-            #panel { id=placeholder }
+            #flash{}
         ]}
     ].
 	
+event(forgot) ->
+    wf:redirect("/forgot");
+
 event(login) ->
-    wf:insert_top(placeholder, "<p>You clicked the button!").
+    Username = wf:q(username),
+    Password = wf:q(password),
+
+    case zm_auth:authenticate(Username, Password) of
+        {ok, _} ->
+            wf:role(users, true),
+            wf:user(Username),
+            wf:redirect_from_login("/home");
+        {error, _} ->
+            wf:flash("Invalid username, or password")
+    end.
+
+

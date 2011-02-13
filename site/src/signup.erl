@@ -24,7 +24,7 @@ inner_body() ->
             #p{},
             #label { text="Username" },
             #textbox { id=username, next=mobile_no },
-            #label { text="Mobile Number" },
+            #label { text="Mobile Number (to send Sign-Up code)" },
             #textbox { id=mobile_no, next=signUpButton },
 
             #p{},
@@ -35,7 +35,7 @@ inner_body() ->
         #is_required { text="Username is required" }
     ]}),
     wf:wire(signUpButton, mobile_no, #validate { validators = [
-        #is_required { text="Password is required" }
+        #is_required { text="Mobile No is required" }
     ]}),
     wf:wire(signUpButton, mobile_no, #validate { validators = [
         #custom { text="Invalid mobile number. (hint: +60192221212)",
@@ -53,7 +53,7 @@ event(signup) ->
 
     case zm_auth:get_user(Username) of
         {ok, _}    -> wf:flash(Id, "User already exists. \nPlease use a different username");
-        {error, _} -> wf:flash(Id, "New user created!")
+        {error, _} -> wf:redirect("/verify")
     end.
 
 validateMobile(_Tag, Mobile) ->
